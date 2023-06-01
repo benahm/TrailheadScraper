@@ -1,7 +1,7 @@
 # TrailheadScraper
 Scrap Trailhead to build a Leaderboard
 
-<p align="center"><img src ="/assets/leaderboard.png" width="400"/></p>
+<p align="center"><img src ="/assets/leaderboard.png" width="300"/></p>
 
 
 #### Setup 
