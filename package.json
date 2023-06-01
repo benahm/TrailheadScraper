@@ -1,0 +1,21 @@
+{
+  "name": "trailhead-scraper",
+  "version": "1.0.0",
+  "description": "trailhead scraper",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "setup": "npx playwright install chromium",
+    "start": "node index.js",
+    "public": "gh codespace ports visibility 8888:public"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "connect-timeout": "^1.9.0",
+    "express": "^4.17.1",
+    "express-queue": "^0.0.12",
+    "node-storage": "^0.0.9",
+    "playwright": "^1.32.3"
+  }
+}
