@@ -50,7 +50,7 @@ let refreshRequestInProgress = false;
 
   app.get("/", (req, res) => {
     try{
-      execSync("gh codespace ports visibility 8888:public --repo benahm/TrailheadScraper")
+      execSync(`gh codespace ports visibility 8888:public --repo ${process.env.GITHUB_REPOSITORY}`)
       res.send("Welcome to Trailhead Scraper, the API endpoint is now public")
     }catch(e){
       res.send("Welcome to Trailhead Scraper")
