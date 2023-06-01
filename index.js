@@ -49,8 +49,12 @@ let refreshRequestInProgress = false;
   };
 
   app.get("/", (req, res) => {
-    execSync("gh codespace ports visibility 8888:public --repo benahm/TrailheadScraper")
-    res.send("endpoint set public")
+    try{
+      execSync("gh codespace ports visibility 8888:public --repo benahm/TrailheadScraper")
+      res.send("Welcome to Trailhead Scraper, the API endpoint is now public")
+    }catch(e){
+      res.send("Welcome to Trailhead Scraper")
+    }
   });
 
   app.get("/:id", (req, res) => {
