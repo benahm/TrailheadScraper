@@ -57,7 +57,7 @@ let refreshRequestInProgress = false;
     }
   });
 
-  app.get("/:id", (req, res) => {
+  app.get("/get/:id", (req, res) => {
     handleRequest(req, res);
   });
 
