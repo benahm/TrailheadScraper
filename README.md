@@ -2,7 +2,7 @@
 Scrap Trailhead to build a Leaderboard
 
 
-#### setup 
+#### Setup 
 
 Clone the repository
 
