@@ -4,6 +4,8 @@ Scrap Trailhead to build a Leaderboard
 
 #### setup 
 
+Clone the repository
+
 Install dependencies 
 
     yarn 
