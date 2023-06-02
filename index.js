@@ -47,6 +47,10 @@ let refreshRequestInProgress = false;
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive'
     });
+    res.write("===================================================================")
+    res.write("\n")
+    res.write("                   Welcome to Trailhead Scraper")
+    res.write("\n")
     res.write("============================== start ==============================")
     res.write("\n")
     for (const id of ids) {
@@ -83,7 +87,6 @@ async function scrapTrailblazerProfile(context, id) {
     await page.goto(scrapURL, {
       waitUntil: "networkidle",
     });
-
     await page.waitForSelector(
       "lwc-tbui-card > div.heading > div.details > h1"
     );
@@ -93,6 +96,7 @@ async function scrapTrailblazerProfile(context, id) {
     await page.waitForSelector(
       "lwc-tds-theme-provider > lwc-tbui-card > div:nth-child(1) > img"
     );
+    // get name
     infos.name = await page.$eval(
       "lwc-tbui-card > div.heading > div.details > h1",
       (node) => node.innerText
@@ -103,18 +107,21 @@ async function scrapTrailblazerProfile(context, id) {
     );
 
     // replace , with space
-    infos.badges = countList[0].replace(/,/g, ' ')
-    infos.points = countList[1].replace(/,/g, ' ')
-    infos.trails = countList[2].replace(/,/g, ' ')
+    infos.badges = countList[0]?.replace(/,/g, ' ')
+    infos.points = countList[1]?.replace(/,/g, ' ')
+    infos.trails = countList[2]?.replace(/,/g, ' ')
 
+    // get level text
     infos.levelText = await page.$eval(
       "lwc-tds-theme-provider > lwc-tbui-card > div:nth-child(1) > img",
       (node) => node.alt
     );
+    // get level image
     infos.levelImage = await page.$eval(
       "lwc-tds-theme-provider > lwc-tbui-card > div:nth-child(1) > img",
       (node) => node.src
     );
+    // get certifications
     try {
       await page.waitForSelector(
         "#aura-directive-id-4 > c-lwc-certifications > c-lwc-card > article > c-lwc-card-header > div > header > div:nth-child(1) > div > h2"
@@ -126,6 +133,7 @@ async function scrapTrailblazerProfile(context, id) {
     } catch (e) {
       infos.certifications = 0;
     }
+    // get superbadges
     try {
       await page.waitForSelector(
         "article > header > div:nth-child(1) > div > h2"
