@@ -18,45 +18,17 @@ let refreshRequestInProgress = false;
   });
   const context = await browser.newContext();
 
-  /**
-   * handle a request
-   */
-  const handleRequest = async (req, res) => {
-    res.type("application/xml");
-
-    console.log(`https://trailblazer.me/id/${req.params.id}`);
-
-    let infos = store.get(req.params.id);
-    if (infos) {
-      res.write("<result>");
-      res.write(`<div class='result name'>${infos.name}</div>`);
-      res.write(`<div class='result badges'>${infos.badges}</div>`);
-      res.write(`<div class='result points'>${infos.points}</div>`);
-      res.write(`<div class='result trails'>${infos.trails}</div>`);
-      res.write(`<div class='result leveltext'>${infos.levelText}</div>`);
-      res.write(`<div class='result levelimage'>${infos.levelImage}</div>`);
-      res.write(
-        `<div class='result certifications'>${infos.certifications}</div>`
-      );
-      res.write(`<div class='result superbadges'>${infos.superbadges}</div>`);
-      res.write("</result>");
-      res.end();
-    } else {
-      res.end();
-    }
-  };
-
   app.get("/", (req, res) => {
-    try{
+    try {
       execSync(`gh codespace ports visibility 8888:public --repo ${process.env.GITHUB_REPOSITORY}`)
       res.send("Welcome to Trailhead Scraper, the API endpoint is now public")
-    }catch(e){
+    } catch (e) {
       res.send("Welcome to Trailhead Scraper")
     }
   });
 
   app.get("/get/:id", (req, res) => {
-    handleRequest(req, res);
+    handleGetRequest(req, res);
   });
 
   app.get("/refresh", async (req, res) => {
@@ -79,7 +51,7 @@ let refreshRequestInProgress = false;
     res.write("\n")
     for (const id of ids) {
       res.write("Scraping " + id)
-      await scrapTrailheadAcccount(context, id)
+      await scrapTrailblazerProfile(context, id)
       res.write(" ✅" + "\n")
     }
     res.write("\n")
@@ -94,7 +66,10 @@ let refreshRequestInProgress = false;
 })();
 
 
-async function scrapTrailheadAcccount(context, id) {
+/**
+ * scrap a trailblazer profile
+ */
+async function scrapTrailblazerProfile(context, id) {
   if (fs.existsSync("store.json")) {
     fs.unlinkSync("store.json")
   }
@@ -127,9 +102,10 @@ async function scrapTrailheadAcccount(context, id) {
       (nodes) => nodes.map((n) => n.innerText)
     );
 
-    infos.badges = countList[0]
-    infos.points = countList[1]
-    infos.trails = countList[2]
+    // replace , with space
+    infos.badges = countList[0].replace(/,/g, ' ')
+    infos.points = countList[1].replace(/,/g, ' ')
+    infos.trails = countList[2].replace(/,/g, ' ')
 
     infos.levelText = await page.$eval(
       "lwc-tds-theme-provider > lwc-tbui-card > div:nth-child(1) > img",
@@ -182,3 +158,31 @@ async function scrapTrailheadAcccount(context, id) {
     page.close()
   }
 }
+
+/**
+ * handle get request
+ */
+function handleGetRequest(req, res) {
+  res.type("application/xml");
+
+  console.log(`get : ${req.params.id}`);
+
+  let infos = store.get(req.params.id);
+  if (infos) {
+    res.write("<result>");
+    res.write(`<div class='result name'>${infos.name}</div>`);
+    res.write(`<div class='result badges'>${infos.badges}</div>`);
+    res.write(`<div class='result points'>${infos.points}</div>`);
+    res.write(`<div class='result trails'>${infos.trails}</div>`);
+    res.write(`<div class='result leveltext'>${infos.levelText}</div>`);
+    res.write(`<div class='result levelimage'>${infos.levelImage}</div>`);
+    res.write(
+      `<div class='result certifications'>${infos.certifications}</div>`
+    );
+    res.write(`<div class='result superbadges'>${infos.superbadges}</div>`);
+    res.write("</result>");
+    res.end();
+  } else {
+    res.end();
+  }
+};
