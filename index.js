@@ -3,7 +3,6 @@ import { execSync } from "child_process"
 import fs from "fs";
 import Storage from "node-storage";
 import express from "express";
-import queue from "express-queue";
 import timeout from 'connect-timeout';
 
 const store = new Storage("store.json");
@@ -12,7 +11,6 @@ let refreshRequestInProgress = false;
 
 (async () => {
   const app = express();
-  app.use(queue({ activeLimit: 10, queuedLimit: 50 }));
   app.use(timeout('120s'))
 
   const browser = await chromium.launch({

@@ -10,13 +10,13 @@ Clone the repository
 
 Install dependencies 
 
-    yarn 
+    npm install 
 
 Install chromium for playwright
 
-    yarn setup
+    npm run setup
 
 Start the server 
 
-    yarn start
+    npm start
 
