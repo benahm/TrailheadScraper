@@ -124,14 +124,18 @@ async function scrapTrailblazerProfile(context, id) {
     // get certifications
     try {
       await page.waitForSelector(
-        "#aura-directive-id-4 > c-lwc-certifications > c-lwc-card > article > c-lwc-card-header > div > header > div:nth-child(1) > div > h2"
+        "div > div.certifications-product-group-header > div.certifications-product-group-info > p.certification-product-subtitle :nth-child(2)"
       );
       infos.certifications = await page.$eval(
-        "#aura-directive-id-4 > c-lwc-certifications > c-lwc-card > article > c-lwc-card-header > div > header > div:nth-child(1) > div > h2",
+        "div > div.certifications-product-group-header > div.certifications-product-group-info > p.certification-product-subtitle :nth-child(2)",
         (node) => node.innerText.split(" ")[0]
       );
     } catch (e) {
-      infos.certifications = 0;
+      infos.certifications = await page.$eval(
+        "article > header > div:nth-child(1) > div > h2",
+        (node) => node.innerText.split(" ")[0]
+      );
+      // infos.certifications = 0;
     }
     // get superbadges
     try {
